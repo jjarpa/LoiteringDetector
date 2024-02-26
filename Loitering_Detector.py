@@ -412,3 +412,15 @@ df_dict.to_csv(file_name, index=False)
 
 # Print the file name for confirmation
 print(f"Dictionary saved to '{file_name}'")
+
+
+# Sort the DataFrame by 'EWM_Anomaly_Score_Max_Fc_Max_Fchd' in ascending order
+sorted_df = df_dict.sort_values(by='EWM_Anomaly_Score_Max_Fc_Max_Fchd', ascending=True)
+
+# Print the 5 most negative rows
+print("5 most negative rows based on 'EWM_Anomaly_Score_Max_Fc_Max_Fchd':")
+print(sorted_df[['MMSI', 'Max_Fc', 'Max_Fchd', 'Anomaly_Score_Max_Fc', 'Anomaly_Score_Max_Fchd', 'EWM_Anomaly_Score_Max_Fc_Max_Fchd']].head(5))
+
+# Print the 5 most positive rows
+print("\n5 most positive rows based on 'EWM_Anomaly_Score_Max_Fc_Max_Fchd':")
+print(sorted_df[['MMSI', 'Max_Fc', 'Max_Fchd', 'Anomaly_Score_Max_Fc', 'Anomaly_Score_Max_Fchd', 'EWM_Anomaly_Score_Max_Fc_Max_Fchd']].tail(5))
