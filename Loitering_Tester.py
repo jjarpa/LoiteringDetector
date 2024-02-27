@@ -10,6 +10,8 @@ import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 from geopy.distance import geodesic
 import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
+
 
 
 def add_calculated_columns(df):
@@ -39,15 +41,22 @@ def plot_vessel_course(time_windows_df, B, G, Fc, Fchd, max_lat, min_lat, max_lo
     ax.add_feature(cfeature.RIVERS, edgecolor='blue')
 
     # Plot vessel course
-    for mmsi in time_windows_df['MMSI'].unique():
-        vessel_data = time_windows_df[time_windows_df['MMSI'] == mmsi]
-        ax.plot(vessel_data['LON'], vessel_data['LAT'], marker='o', markersize=2, linewidth=1, label=f'MMSI: {mmsi}')
+    for i in range(len(time_windows_df)-1):
+        start_point = (time_windows_df['LON'].iloc[i], time_windows_df['LAT'].iloc[i])
+        end_point = (time_windows_df['LON'].iloc[i+1], time_windows_df['LAT'].iloc[i+1])
+        if i == len(time_windows_df)-2:
+            # Plot red arrow for the last point
+            ax.annotate('', xy=end_point, xytext=start_point, arrowprops=dict(
+                arrowstyle="fancy", 
+                color='red',
+                lw=2)
+                , size=20)
+        else:
+            # Plot blue marker for intermediate points
+            ax.plot(end_point[0], end_point[1], marker='.', color='blue', markersize=1)
 
     # Plot green square at the first point
     ax.plot(time_windows_df['LON'].iloc[0], time_windows_df['LAT'].iloc[0], marker='s', markersize=8, color='green')
-
-    # Plot red triangle at the last point
-    ax.plot(time_windows_df['LON'].iloc[-1], time_windows_df['LAT'].iloc[-1], marker='^', markersize=8, color='red')
 
     # Add latitude and longitude gridlines
     ax.gridlines(draw_labels=True, linestyle='--')
@@ -215,10 +224,10 @@ def process_mmsi(mmsi, df_calculations, time_window_hours):
     mmsi_data.reset_index(drop=True, inplace=True)
     
     # Get the maximum and minimum 'LAT' and 'LON' values
-    max_lat = mmsi_data['LAT'].max() + 1
-    min_lat = mmsi_data['LAT'].min() - 1
-    max_lon = mmsi_data['LON'].max() + 1
-    min_lon = mmsi_data['LON'].min() - 1
+    max_lat = mmsi_data['LAT'].max()
+    min_lat = mmsi_data['LAT'].min()
+    max_lon = mmsi_data['LON'].max()
+    min_lon = mmsi_data['LON'].min()
 
     # Check if the MMSI data has at least two timestamps
     if len(mmsi_data) < 2:
@@ -281,8 +290,9 @@ def process_mmsi(mmsi, df_calculations, time_window_hours):
     return max_Fc_mmsi, max_Fchd_mmsi
 
 # Example usage
-mmsi = 565747000  # Specify the MMSI you want to process
+mmsi = 357051000    # Specify the MMSI you want to process
 max_Fc_mmsi, max_Fchd_mmsi = process_mmsi(mmsi, df_calculations, time_window_hours)
 
 if max_Fc_mmsi is not None and max_Fchd_mmsi is not None:
     print(f"MMSI: {mmsi}, Max Fc: {max_Fc_mmsi}, Max Fchd: {max_Fchd_mmsi}")
+
