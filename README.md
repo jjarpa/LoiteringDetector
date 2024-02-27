@@ -95,4 +95,7 @@ Now you can choose any of the MSSI to be the input of 'Loitering_Tester.py' prog
 
 The program will generate a sequence of plots (charts). One for each time-frame analysis. You can easily observ the trajectory of the vessels and check if the algorithm works well.
 
+3. Similarly, you can run the program 'Loitering_Movie_Gen.py' which generate a movie of the vessel trajectory using the same data.
+   Just need to replace the same variable  mmsi = 357051000 with the desired MMSSI.
+
    
