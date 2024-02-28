@@ -196,7 +196,7 @@ else:
 
 
 # Apply the function to add the columns to the original DataFrame
-df_calculations = add_calculated_columns(df.copy())
+df_calculations = add_calculated_columns(df_sorted)
 
 # Display the first few rows of the new DataFrame
 print(df_calculations.head())
